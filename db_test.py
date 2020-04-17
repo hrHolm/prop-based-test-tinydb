@@ -11,9 +11,6 @@ def insertTwo(int, int2):
     db.insert({'int': int2, 'char': 'b'})
     assert len(db.all()) == 2
 
-def test_db_insert2():
-    assert len(db.all()) == 2
-
 
 if __name__ == "__main__":
     db = TinyDB(storage=MemoryStorage)
