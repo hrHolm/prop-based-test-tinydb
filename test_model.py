@@ -57,4 +57,4 @@ class TinyDBComparison(RuleBasedStateMachine):
         assert set(self.database.get(doc_ids=[k])) == self.model[k]
 
 
-TestDBComparison = TinyDBComparison.TestCase
+#TestDBComparison = TinyDBComparison.TestCase
