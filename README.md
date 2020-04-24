@@ -10,4 +10,6 @@ pytest --hypothesis-show-statistics --ignore=examples
 ```
 ## Development
 Pytest will only run methods prefixed with `test_`, e.g. `test_decode_inverts_encode(s)`
-test_model.py is WIP, but inserting faults is not being caught...
+test_model.py is abandoned, inserting faults is not being caught...
+
+Apparantly, preconditions are not supported when using bundles, read bottom of "Preconditions" in https://hypothesis.readthedocs.io/en/latest/stateful.html#preconditions
