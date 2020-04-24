@@ -8,28 +8,31 @@ import random
 
 DEADLINE_TIME = 1000
 
+
 class TinyDBComparison(RuleBasedStateMachine):
 
     def __init__(self):
         super(TinyDBComparison, self).__init__()
-          # sut, memory db makes sure states are reset
-
     model = {}
     ids = []
     documents = []
     database = None
 
-
     @initialize()
     def init_state(self):
         '''Start from fresh in each iteration'''
-        self.database = TinyDB(storage=MemoryStorage)
+        self.database = TinyDB(
+            storage=MemoryStorage)  # sut, memory db makes sure states are reset
         self.ids = []
         self.documents = []
         self.database.purge_tables()
         self.model = {}
 
-    @rule(v=dictionaries(keys=integers(), values=integers(min_value=0), min_size=1)) 
+    @rule(v=dictionaries(
+        keys=one_of(integers(), text()),
+        values=one_of(integers(), text()),
+        min_size=1
+        ))
     def insert_value(self, v):
         d_id = self.database.insert(v)  # TinyDB calculates ID when inserting
         #print(d_id, v)
@@ -38,7 +41,6 @@ class TinyDBComparison(RuleBasedStateMachine):
         print(self.model[d_id])
         self.ids.append(d_id)
 
-
     @precondition(lambda self: len(self.ids) > 0)
     @rule()
     def remove(self):
@@ -46,18 +48,16 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.model.pop(id_to_remove)
         self.database.remove(doc_ids=[id_to_remove])
 
-   
     @rule()
     def get_all(self):
         assert len(self.model) == len(self.database.all())
 
-    
     @precondition(lambda self: len(self.ids) > 0)
     @rule()
     def contains_agree(self):
         '''Property'''
         some_id = random.choice(self.ids)
-        assert (self.model[some_id] is not None) and (self.database.contains(doc_ids=[some_id]) is not False)
+        assert (some_id in self.model) == (self.database.contains(doc_ids=[some_id]))
 
     @precondition(lambda self: len(self.ids) > 0)
     @rule()
@@ -65,6 +65,9 @@ class TinyDBComparison(RuleBasedStateMachine):
         '''Property'''
         some_id = random.choice(self.ids)
         assert self.database.get(doc_id=some_id) == self.model[some_id]
+    
+    
+    
     '''
     TODO: look into if this is possible after all, I might've missed something - however it caused flaky generations...
     def teardown(self):
@@ -74,5 +77,10 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.database.close()
         self.model = {}
     '''
+
+# Adjust any settings here, default max is 100 examples, 50 is default step count
+TinyDBComparison.TestCase.settings = settings(
+    max_examples=200, stateful_step_count=100
+)
 
 TestDBComparison = TinyDBComparison.TestCase
