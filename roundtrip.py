@@ -1,13 +1,13 @@
 from tinydb import TinyDB
-from tinydb.storages import MemoryStorage
+from tinydb.storages import MemoryStorage, JSONStorage
 
-import hypothesis.strategies as st
+from hypothesis.strategies import text, integers, binary, lists, dictionaries, characters, one_of, composite
 from hypothesis import given
 
-db = TinyDB(storage=MemoryStorage)
+db = TinyDB('./db.json', storage = JSONStorage)
 
-@st.composite
-def mappings(draw, elem1=st.integers(), elem2=st.text()):
+@composite
+def mappings(draw, elem1=integers(), elem2=text()):
 
     keys = draw(elem1)
     values = draw(elem2)
@@ -16,18 +16,32 @@ def mappings(draw, elem1=st.integers(), elem2=st.text()):
         keys : values
     }
 
-@given(st.one_of(mappings(st.integers(), st.text()),
-            mappings(st.text(), st.text()),
-            mappings(st.integers(), st.integers()),
-            mappings(st.characters(), st.text()),
-            mappings(st.text(), st.lists(st.integers())),
-            mappings(st.integers(), st.binary()),
-            mappings(st.integers(), st.dictionaries(st.integers(), st.text()))))
+@given(one_of(mappings(integers(), text()),
+            mappings(text(), text()),
+            mappings(integers(), integers()),
+            mappings(characters(), text()),
+            mappings(text(), lists(integers())),
+            mappings(integers(), binary()),
+            mappings(integers(), dictionaries(integers(), text()))))
 def test_roundtrip(thing):
     db.purge()
     db.insert(thing)
     assert(len(db.all()) == 1)
 
     after_db = db.all()
-    print(after_db)
     assert after_db.pop() == thing
+
+@given(one_of(mappings(integers(), text()),
+            mappings(text(), text()),
+            mappings(integers(), integers()),
+            mappings(characters(), text()),
+            mappings(text(), lists(integers())),
+            mappings(integers(), binary()),
+            mappings(integers(), dictionaries(integers(), text()))))
+def test_storage_readwrite(thing):
+    storage = JSONStorage('./readwrite.json')
+
+    storage.write(thing)
+
+    assert thing == storage.read()
+    storage.close()
