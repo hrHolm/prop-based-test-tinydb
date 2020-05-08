@@ -36,7 +36,7 @@ class TinyDBComparison(RuleBasedStateMachine):
     def insert_value(self, v):
         d_id = self.database.insert(v)  # TinyDB calculates ID when inserting
         #print(d_id, v)
-        # d_id = 6 # Use this line to test fault injecton. It works
+        #d_id = 6 # Use this line to test fault injecton. It works
         self.model[d_id] = v # You can also outcomment this, it will find a small falsifying example
         self.ids.append(d_id)
 
@@ -59,7 +59,7 @@ class TinyDBComparison(RuleBasedStateMachine):
         values=one_of(integers(), text()),
         min_size=1
         ))
-    def retrieve_value(self, v):
+    def retrieve_value(self, v): # TODO: not necessarys
         new_value = self.database.insert(v)
         doc = self.database.get(doc_id=new_value)
         self.ids.append(new_value)
