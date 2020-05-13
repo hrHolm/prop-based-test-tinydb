@@ -1,7 +1,7 @@
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
 from hypothesis.strategies import integers, dictionaries, text, one_of, lists, floats, booleans
-from hypothesis import given, settings, event
+from hypothesis import given, settings, event, HealthCheck
 from hypothesis.stateful import RuleBasedStateMachine, rule, precondition, initialize
 import random
 
@@ -87,7 +87,7 @@ class TinyDBComparison(RuleBasedStateMachine):
 
 # Adjust any settings here, default max is 100 examples, 50 is default step count
 TinyDBComparison.TestCase.settings = settings(
-    max_examples=200, stateful_step_count=100
+    max_examples=200, stateful_step_count=100, suppress_health_check=[HealthCheck.data_too_large]
 )
 
 TestDBComparison = TinyDBComparison.TestCase

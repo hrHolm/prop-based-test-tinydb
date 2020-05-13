@@ -6,7 +6,7 @@ pip install -r requirements.txt
 ```
 Run tests with:
 ```bash
-pytest --hypothesis-show-statistics --ignore=examples
+pytest --hypothesis-show-statistics --ignore=examples --cov
 ```
 ## Development
 Pytest will only run methods prefixed with `test_`, e.g. `test_decode_inverts_encode(s)`

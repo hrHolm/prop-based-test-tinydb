@@ -1,3 +1,4 @@
 pytest
+pytest-cov
 hypothesis
 tinydb==3.15.2
