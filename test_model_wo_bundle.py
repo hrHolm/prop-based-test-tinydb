@@ -2,8 +2,9 @@ from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
 from hypothesis.strategies import integers, dictionaries, text, one_of, lists, floats, booleans
 from hypothesis import given, settings, event, HealthCheck
-from hypothesis.stateful import RuleBasedStateMachine, rule, precondition, initialize
+from hypothesis.stateful import RuleBasedStateMachine, rule, precondition, initialize, invariant
 import random
+import csv
 
 doc_generator = dictionaries(
         keys=one_of(integers(), text()),
@@ -16,7 +17,8 @@ doc_generator = dictionaries(
             ),
         min_size=1
         )
-
+file = open('list_lengths.csv', 'w', newline='\n')
+writer = csv.writer(file)
 class TinyDBComparison(RuleBasedStateMachine):
 
     def __init__(self):
@@ -44,9 +46,10 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.model[d_id] = v # You can also outcomment this, it will find a small falsifying example
         self.ids.append(d_id)
 
-    @rule(v=lists(elements=doc_generator, min_size=2))
+    @rule(v=lists(elements=doc_generator, min_size=2, max_size=1000))
     def insert_values(self, v):
-        event('length:' + str(len(v)))
+        #event('length:' + str(len(v)))
+        writer.writerow(str(len(v)))
         d_ids = self.database.insert_multiple(v)
         i = 0
         for d_id in d_ids:
@@ -67,20 +70,21 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.model.clear()
         self.ids.clear()
 
-    @rule()
+    @precondition(lambda self: len(self.ids) > 0)
+    @invariant()
     def get_all(self):
         '''Property'''
         assert len(self.model) == len(self.database.all())
 
     @precondition(lambda self: len(self.ids) > 0)
-    @rule()
+    @invariant()
     def contains_agree(self):
         '''Property'''
         some_id = random.choice(self.ids)
         assert (some_id in self.model) == (self.database.contains(doc_ids=[some_id]))
 
     @precondition(lambda self: len(self.ids) > 0)
-    @rule()
+    @invariant()
     def values_agree(self):
         '''Property'''
         some_id = random.choice(self.ids)
