@@ -8,6 +8,11 @@ import random
 
 DEADLINE_TIME = 1000
 
+doc_generator = dictionaries(
+        keys=one_of(integers(), text()),
+        values=one_of(integers(), text()),
+        min_size=1
+        )
 
 class TinyDBComparison(RuleBasedStateMachine):
 
@@ -28,15 +33,10 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.database.purge_tables()
         self.model = {}
 
-    @rule(v=dictionaries(
-        keys=one_of(integers(), text()),
-        values=one_of(integers(), text()),
-        min_size=1
-        ))
+    @rule(v=doc_generator)
     def insert_value(self, v):
         d_id = self.database.insert(v)  # TinyDB calculates ID when inserting
-        #print(d_id, v)
-        #d_id = 6 # Use this line to test fault injecton. It works
+        #d_id = 6 # Use this line to test fault injecton
         self.model[d_id] = v # You can also outcomment this, it will find a small falsifying example
         self.ids.append(d_id)
 
@@ -54,35 +54,6 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.model[d_ids[1]] = item2
         self.model[d_ids[2]] = item3
 
-    @rule(v=dictionaries(
-        keys=one_of(integers(), text()),
-        values=one_of(integers(), text()),
-        min_size=1
-        ))
-    def retrieve_value(self, v): # TODO: not necessarys
-        new_value = self.database.insert(v)
-        doc = self.database.get(doc_id=new_value)
-        self.ids.append(new_value)
-        self.model[new_value] = doc
-
-    #@rule(v=dictionaries(
-    #    keys=one_of(integers(), text()),
-    #    values=one_of(integers(), text()),
-    #    min_size=1
-    #), v2=dictionaries(
-    #    keys=one_of(integers(), text()),
-    #    values=one_of(integers(), text()),
-    #    min_size=1
-    #))
-    #def update_value(self, v, v2):
-        #id_to_update = self.database.insert(v)
-        #doc_to_update = self.database.get(doc_id=id_to_update)
-        #updated_id = doc_to_update.update(v2)
-        #updated_id = self.database.update(v2, cond=doc_to_update)
-        #updated_id = self.database.update(v2, doc_ids=[id_to_update])
-        #self.ids.append(updated_id)
-
-    # self.model[updated_id] = v2
     @precondition(lambda self: len(self.ids) > 0)
     @rule()
     def remove(self):
@@ -107,18 +78,6 @@ class TinyDBComparison(RuleBasedStateMachine):
         '''Property'''
         some_id = random.choice(self.ids)
         assert self.database.get(doc_id=some_id) == self.model[some_id]
-    
-    
-    
-    '''
-    TODO: look into if this is possible after all, I might've missed something - however it caused flaky generations...
-    def teardown(self):
-        self.ids = []
-        self.documents = []
-        self.database.purge_tables()
-        self.database.close()
-        self.model = {}
-    '''
 
 # Adjust any settings here, default max is 100 examples, 50 is default step count
 TinyDBComparison.TestCase.settings = settings(
