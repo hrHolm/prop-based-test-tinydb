@@ -1,6 +1,6 @@
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
-from hypothesis.strategies import integers, dictionaries, text, one_of, binary, lists
+from hypothesis.strategies import integers, dictionaries, text, one_of, binary, lists, floats, booleans
 from hypothesis import given, settings, event
 from hypothesis.stateful import Bundle, RuleBasedStateMachine, rule, precondition, initialize
 from collections import defaultdict
@@ -10,7 +10,13 @@ DEADLINE_TIME = 1000
 
 doc_generator = dictionaries(
         keys=one_of(integers(), text()),
-        values=one_of(integers(), text()),
+        values=one_of(
+            integers(), 
+            text(), 
+            floats(), 
+            lists(elements=one_of(text(), integers()), min_size=2), 
+            booleans()
+            ),
         min_size=1
         )
 
