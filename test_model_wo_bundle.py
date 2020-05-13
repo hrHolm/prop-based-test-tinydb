@@ -1,12 +1,9 @@
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
-from hypothesis.strategies import integers, dictionaries, text, one_of, binary, lists, floats, booleans
+from hypothesis.strategies import integers, dictionaries, text, one_of, lists, floats, booleans
 from hypothesis import given, settings, event
-from hypothesis.stateful import Bundle, RuleBasedStateMachine, rule, precondition, initialize
-from collections import defaultdict
+from hypothesis.stateful import RuleBasedStateMachine, rule, precondition, initialize
 import random
-
-DEADLINE_TIME = 1000
 
 doc_generator = dictionaries(
         keys=one_of(integers(), text()),
@@ -24,6 +21,7 @@ class TinyDBComparison(RuleBasedStateMachine):
 
     def __init__(self):
         super(TinyDBComparison, self).__init__()
+    
     model = {}
     ids = []
     documents = []
@@ -48,7 +46,7 @@ class TinyDBComparison(RuleBasedStateMachine):
 
     @rule(v=lists(elements=doc_generator, min_size=2))
     def insert_values(self, v):
-        d_ids = self.database.insert_multiple(v)  # TinyDB calculates ID when inserting
+        d_ids = self.database.insert_multiple(v)
         i = 0
         for d_id in d_ids:
             self.ids.append(d_id)
@@ -70,6 +68,7 @@ class TinyDBComparison(RuleBasedStateMachine):
 
     @rule()
     def get_all(self):
+        '''Property'''
         assert len(self.model) == len(self.database.all())
 
     @precondition(lambda self: len(self.ids) > 0)
