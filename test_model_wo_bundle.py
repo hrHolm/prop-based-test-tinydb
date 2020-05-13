@@ -63,6 +63,12 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.database.remove(doc_ids=[id_to_remove])
 
     @rule()
+    def remove_all(self):
+        self.database.purge_tables()
+        self.model.clear()
+        self.ids.clear()
+
+    @rule()
     def get_all(self):
         assert len(self.model) == len(self.database.all())
 
