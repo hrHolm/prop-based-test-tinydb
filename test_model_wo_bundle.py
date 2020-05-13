@@ -40,19 +40,14 @@ class TinyDBComparison(RuleBasedStateMachine):
         self.model[d_id] = v # You can also outcomment this, it will find a small falsifying example
         self.ids.append(d_id)
 
-    @rule(v=one_of(integers(), text()))
+    @rule(v=lists(elements=doc_generator, min_size=2))
     def insert_values(self, v):
-        #Not beautiful, but had trouble getting it working by generating dictionaries
-        item = {v: v, v: v}
-        item2 = {v: v, v: v}
-        item3 = {v: v, v: v}
-        d_ids = self.database.insert_multiple([item, item2, item3])  # TinyDB calculates ID when inserting
-        self.ids.append(d_ids[0])
-        self.ids.append(d_ids[1])
-        self.ids.append(d_ids[2])
-        self.model[d_ids[0]] = item
-        self.model[d_ids[1]] = item2
-        self.model[d_ids[2]] = item3
+        d_ids = self.database.insert_multiple(v)  # TinyDB calculates ID when inserting
+        i = 0
+        for d_id in d_ids:
+            self.ids.append(d_id)
+            self.model[d_id] = v[i]
+            i += 1
 
     @precondition(lambda self: len(self.ids) > 0)
     @rule()
