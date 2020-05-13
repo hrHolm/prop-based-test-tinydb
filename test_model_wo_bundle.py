@@ -46,6 +46,7 @@ class TinyDBComparison(RuleBasedStateMachine):
 
     @rule(v=lists(elements=doc_generator, min_size=2))
     def insert_values(self, v):
+        event('length:' + str(len(v)))
         d_ids = self.database.insert_multiple(v)
         i = 0
         for d_id in d_ids:
