@@ -1,19 +1,27 @@
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage
-from hypothesis.strategies import integers, dictionaries, text, one_of, lists, floats, booleans
+from hypothesis.strategies import integers, dictionaries, text, one_of, lists, floats, booleans, characters, binary, none
 from hypothesis import given, settings, event, HealthCheck
 from hypothesis.stateful import RuleBasedStateMachine, rule, precondition, initialize, invariant
 import random
 import csv
 
 doc_generator = dictionaries(
-        keys=one_of(integers(), text()),
+        keys=one_of(integers(), text(), characters()),
         values=one_of(
-            integers(), 
+            integers(),
+            text(alphabet=one_of(characters(whitelist_categories=('Lo', 'Pf')),
+                                                characters(whitelist_categories=('P')),
+                                                characters(whitelist_categories=('S', 'Z')),
+                                                characters(whitelist_categories=('Z')),
+                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc', 'Co')))),
             text(), 
-            floats(), 
+            floats(),
+            binary(),
+            none(),
             lists(elements=one_of(text(), integers()), min_size=2), 
-            booleans()
+            booleans(),
+            dictionaries(integers(), text())
             ),
         min_size=1
         )
