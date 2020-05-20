@@ -1,10 +1,10 @@
 from tinydb import TinyDB
 from tinydb.storages import MemoryStorage, JSONStorage
 
-from hypothesis.strategies import text, integers, binary, lists, dictionaries, characters, one_of, composite
-from hypothesis import given
+from hypothesis.strategies import text, integers, binary, lists, dictionaries, characters, one_of, composite, none, floats, booleans
+from hypothesis import given, find, settings, Verbosity
 
-db = TinyDB('./db.json', storage = JSONStorage)
+db = TinyDB(storage=MemoryStorage)
 
 @composite
 def mappings(draw, elem1=integers(), elem2=text()):
@@ -16,28 +16,49 @@ def mappings(draw, elem1=integers(), elem2=text()):
         keys : values
     }
 
-@given(one_of(mappings(integers(), text()),
-            mappings(text(), text()),
-            mappings(integers(), integers()),
-            mappings(characters(), text()),
-            mappings(text(), lists(integers())),
-            mappings(integers(), binary()),
-            mappings(integers(), dictionaries(integers(), text()))))
+''''''
+
+@given(dictionaries(one_of(integers(), text(), characters()), 
+                    one_of(text(alphabet=one_of(characters(whitelist_categories=('Lo', 'Pf')),
+                                                characters(whitelist_categories=('P')),
+                                                characters(whitelist_categories=('S', 'Z')),
+                                                characters(whitelist_categories=('Z')),
+                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')),
+                                                characters(whitelist_categories=('Co')))),
+                    text(),
+                    floats(),
+                    integers(),
+                    binary(),
+                    none(),
+                    lists(elements=one_of(text(), integers()), min_size=2),
+                    booleans(),
+                    dictionaries(integers(), text()),
+                    ), min_size=1))
 def test_roundtrip(thing):
     db.purge()
     db.insert(thing)
     assert(len(db.all()) == 1)
 
+    print(thing)
+
     after_db = db.all()
     assert after_db.pop() == thing
 
-@given(one_of(mappings(integers(), text()),
-            mappings(text(), text()),
-            mappings(integers(), integers()),
-            mappings(characters(), text()),
-            mappings(text(), lists(integers())),
-            mappings(integers(), binary()),
-            mappings(integers(), dictionaries(integers(), text()))))
+@given(dictionaries(one_of(text(), characters()), 
+                    one_of(text(alphabet=one_of(characters(whitelist_categories=('Lo', 'Pf')),
+                                                characters(whitelist_categories=('P')),
+                                                characters(whitelist_categories=('S', 'Z')),
+                                                characters(whitelist_categories=('Z')),
+                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')),
+                                                characters(whitelist_categories=('Co')))),
+                    text(),
+                    floats(),
+                    integers(),
+                    none(),
+                    lists(elements=one_of(text(), integers()), min_size=2),
+                    booleans(),
+                    dictionaries(integers(), text()),
+                    ), min_size=1))
 def test_storage_readwrite(thing):
     storage = JSONStorage('./readwrite.json')
 
