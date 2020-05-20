@@ -23,8 +23,7 @@ def mappings(draw, elem1=integers(), elem2=text()):
                                                 characters(whitelist_categories=('P')),
                                                 characters(whitelist_categories=('S', 'Z')),
                                                 characters(whitelist_categories=('Z')),
-                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')),
-                                                characters(whitelist_categories=('Co')))),
+                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')))),
                     text(),
                     floats(),
                     integers(),
@@ -39,22 +38,20 @@ def test_roundtrip(thing):
     db.insert(thing)
     assert(len(db.all()) == 1)
 
-    print(thing)
-
     after_db = db.all()
     assert after_db.pop() == thing
 
-@given(dictionaries(one_of(text(), characters()), 
+@given(dictionaries(one_of(text(), characters(), integers()), 
                     one_of(text(alphabet=one_of(characters(whitelist_categories=('Lo', 'Pf')),
                                                 characters(whitelist_categories=('P')),
                                                 characters(whitelist_categories=('S', 'Z')),
                                                 characters(whitelist_categories=('Z')),
-                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')),
-                                                characters(whitelist_categories=('Co')))),
+                                                characters(whitelist_categories=('Lt', 'Cf', 'Cc')))),
                     text(),
                     floats(),
                     integers(),
                     none(),
+                    binary(),
                     lists(elements=one_of(text(), integers()), min_size=2),
                     booleans(),
                     dictionaries(integers(), text()),
