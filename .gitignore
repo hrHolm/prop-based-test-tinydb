@@ -2,4 +2,3 @@ __pycache__/
 .hypothesis/
 .pytest_cache/
 .coverage
-htmlcov/

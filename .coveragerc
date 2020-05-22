@@ -1,0 +1,2 @@
+[run]
+omit = C:/Users/Frederik/AppData/Roaming/Python/Python37/site-packages/colorama/*

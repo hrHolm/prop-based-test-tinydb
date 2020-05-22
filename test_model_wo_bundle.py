@@ -26,7 +26,7 @@ doc_generator = dictionaries(
             ),
         min_size=1
         )
-file = open('list_lengths.csv', 'w', newline='\n')
+file = open('list_lengths2.csv', 'w', newline='\n')
 writer = csv.writer(file)
 class TinyDBComparison(RuleBasedStateMachine):
 
