@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for tinydb\database.py: 64%</title>
+    <title>Coverage for tinydb\database.py: 66%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>tinydb\database.py</b> :
-            <span class="pc_cov">64%</span>
+            <span class="pc_cov">66%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             244 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">156 run</span>
-            <span class="mis show_mis shortkey_m button_toggle_mis">88 missing</span>
+            <span class="run shortkey_r button_toggle_run">160 run</span>
+            <span class="mis show_mis shortkey_m button_toggle_mis">84 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">0 excluded</span>
         </h2>
     </div>
@@ -161,9 +161,9 @@
     <p id="t108" class="run"><span class="n"><a href="#t108">108</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t109" class="pln"><span class="n"><a href="#t109">109</a></span><span class="t">            <span class="com"># Try accessing the full data dict from the data proxy</span>&nbsp;</span><span class="r"></span></p>
     <p id="t110" class="run"><span class="n"><a href="#t110">110</a></span><span class="t">            <span class="nam">raw_data</span> <span class="op">=</span> <span class="nam">data</span><span class="op">.</span><span class="nam">raw_data</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t111" class="mis show_mis"><span class="n"><a href="#t111">111</a></span><span class="t">        <span class="key">except</span> <span class="nam">AttributeError</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t111" class="run"><span class="n"><a href="#t111">111</a></span><span class="t">        <span class="key">except</span> <span class="nam">AttributeError</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t112" class="pln"><span class="n"><a href="#t112">112</a></span><span class="t">            <span class="com"># Not a data proxy, fall back to regular reading</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t113" class="mis show_mis"><span class="n"><a href="#t113">113</a></span><span class="t">            <span class="nam">raw_data</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_storage</span><span class="op">.</span><span class="nam">read</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t113" class="run"><span class="n"><a href="#t113">113</a></span><span class="t">            <span class="nam">raw_data</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_storage</span><span class="op">.</span><span class="nam">read</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t114" class="pln"><span class="n"><a href="#t114">114</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t115" class="run"><span class="n"><a href="#t115">115</a></span><span class="t">        <span class="nam">raw_data</span><span class="op">[</span><span class="nam">self</span><span class="op">.</span><span class="nam">_table_name</span><span class="op">]</span> <span class="op">=</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t116" class="run"><span class="n"><a href="#t116">116</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_storage</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="nam">raw_data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -644,8 +644,8 @@
     <p id="t591" class="pln"><span class="n"><a href="#t591">591</a></span><span class="t"><span class="str">        Purge the table by removing all documents.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t592" class="pln"><span class="n"><a href="#t592">592</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t593" class="pln"><span class="n"><a href="#t593">593</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t594" class="mis show_mis"><span class="n"><a href="#t594">594</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_write</span><span class="op">(</span><span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t595" class="mis show_mis"><span class="n"><a href="#t595">595</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_last_id</span> <span class="op">=</span> <span class="num">0</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t594" class="run"><span class="n"><a href="#t594">594</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_write</span><span class="op">(</span><span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t595" class="run"><span class="n"><a href="#t595">595</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_last_id</span> <span class="op">=</span> <span class="num">0</span>&nbsp;</span><span class="r"></span></p>
     <p id="t596" class="pln"><span class="n"><a href="#t596">596</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t597" class="run"><span class="n"><a href="#t597">597</a></span><span class="t">    <span class="key">def</span> <span class="nam">search</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">cond</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t598" class="pln"><span class="n"><a href="#t598">598</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
@@ -736,7 +736,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
-            created at 2020-05-22 14:40
+            created at 2020-05-22 15:05
         </p>
     </div>
 </div>

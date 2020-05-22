@@ -6,16 +6,6 @@ from hypothesis import given, find, settings, Verbosity
 
 db = TinyDB(storage=MemoryStorage)
 
-@composite
-def mappings(draw, elem1=integers(), elem2=text()):
-
-    keys = draw(elem1)
-    values = draw(elem2)
-
-    return {
-        keys : values
-    }
-
 ''''''
 
 @given(dictionaries(one_of(integers(), text(), characters()), 
