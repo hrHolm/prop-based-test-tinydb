@@ -10,5 +10,5 @@ fig = px.bar(new, x="Command", y="Count")
 fig.update_layout(
     title_text='Command Generation Histogram'
 )
-fig.write_html('yo.html')
+fig.write_html('com_histogram.html')
 #fig.write_image("images/fig1.pdf")
